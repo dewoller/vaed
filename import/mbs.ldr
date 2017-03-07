@@ -1,0 +1,39 @@
+LOAD CSV  
+    from all filenames matching ~<.*>
+         in directory 'mbs'
+         having fields ( pin,dos,pinstate,spr,spr_rsp,sprprac,sprstate,rpr,rprprac,rprstate,item,numserv,mdv_numserv,benpaid,feecharged,schedfee,billtypecd,inhospital,sampleweight)
+  INTO postgresql://dewoller:Ri1cd!@localhost:5432/pbs?mbs
+    with fields      
+    	optionally enclosed by '"', 
+         fields terminated by ',',
+         skip header = 1,  
+         truncate
+ 
+    SET work_mem to '128 MB', maintenance_work_mem to '256 MB'
+
+    BEFORE LOAD DO  
+     $$ drop table if exists mbs; $$,  
+
+$$ create table mbs(
+pin	char	(11 ),
+dos	date,
+pinstate	char	(1),
+spr	char	(9 ),
+spr_rsp	char	(4),
+sprprac	char	(1),
+sprstate	char	(1),
+rpr	char	(9),
+rprprac	char	(1),
+rprstate	char	(1),
+item	char	(5),
+numserv	integer	,
+mdv_numserv	integer	,
+benpaid	money	,
+feecharged	money	,
+schedfee	money	,
+billtypecd	char	(1),
+inhospital	char	(1),
+sample_weight numeric(20,16));
+   $$
+   ; 
+

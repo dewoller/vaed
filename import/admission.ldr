@@ -1,0 +1,55 @@
+LOAD CSV  
+    from admission.txt
+         having fields ( sex_id, five_year_age_grp, hospital_region, month_of_separation, year_of_separation, los, los_type, sameday_id, hospital_in_the_home_los, hospital_in_the_home_separation, care_type_id, adm_type_id, criterion_for_admission, intended_duration_of_stay, readmission_rehab_description, readmitted, rehab_associated, patient_type, accommodation_type_on_separation_id, vic_adj_ar_drg, vic_adj_ar_mdc, clininical_specialty, drg_type, duration_of_stay_hours_in_inte, duration_of_mechanical_ventiltat, duration_of_stay__hours__in_coro, duration_of_non_invasive_ventila, impairment, accomodation_type_id, adm_source_TEXT, wies, wies_fundable_flag, sep_mode_TEXT, tertiary_status_TEXT, year, admission_id )
+  INTO postgresql://dewoller:Ri1cd!@localhost:5432/vaed?admission_temp
+    with fields      
+    	optionally enclosed by '"', 
+         fields terminated by '\t',
+         skip header = 0,  
+         truncate
+ 
+    SET work_mem to '128 MB', maintenance_work_mem to '256 MB'
+
+    BEFORE LOAD DO  
+     $$ drop table if exists admission_temp; $$,  
+
+$$ create table admission_temp( 
+sex_id integer,
+five_year_age_grp char(7),
+hospital_region character varying(50),
+month_of_separation integer,
+year_of_separation char(4),
+los integer,
+los_type char(1),
+sameday_id char(1),
+hospital_in_the_home_los integer,
+hospital_in_the_home_separation char(1),
+care_type_id char(2),
+adm_type_id char(1),
+criterion_for_admission char(1),
+intended_duration_of_stay integer,
+readmission_rehab_description character varying(100),
+readmitted char(1),
+rehab_associated char(1),
+patient_type char(1),
+accommodation_type_on_separation_id char(1),
+vic_adj_ar_drg char(8),
+vic_adj_ar_mdc character varying(100) ,
+clininical_specialty character varying(100) ,
+drg_type char(1),
+duration_of_stay_hours_in_inte integer,
+duration_of_mechanical_ventiltat integer,
+duration_of_stay__hours__in_coro integer,
+duration_of_non_invasive_ventila integer,
+impairment character varying(150),
+accomodation_type_id varchar(10),
+adm_source_TEXT character varying(100),
+wies numeric(20,16),
+wies_fundable_flag char(1),
+sep_mode_TEXT character varying(100),
+tertiary_status_TEXT character varying(100),
+year char(7),
+admission_id integer not null);
+  $$
+   ; 
+

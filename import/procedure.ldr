@@ -1,0 +1,23 @@
+LOAD CSV  
+    from procedure.txt
+         having fields ( admission_id , "position" , procedure_code )
+  INTO postgresql://dewoller:Ri1cd!@localhost:5432/vaed?admission_procedure
+    with fields      
+    	optionally enclosed by '"', 
+         fields terminated by '\t',
+         skip header = 0,  
+         truncate
+ 
+    SET work_mem to '128 MB', maintenance_work_mem to '256 MB'
+
+    BEFORE LOAD DO  
+     $$ drop table if exists admission_procedure; $$,  
+
+$$ create table admission_procedure(
+  admission_id integer NOT NULL,
+  "position" integer NOT NULL,
+  procedure_code character varying(10)
+);
+   $$
+   ; 
+

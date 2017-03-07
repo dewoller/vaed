@@ -1,0 +1,23 @@
+LOAD CSV  
+    from diagnosis.txt
+         having fields ( admission_id, "position", pref, diag_code )
+  INTO postgresql://dewoller:Ri1cd!@localhost:5432/vaed?admission_diagnosis
+    with fields      
+    	optionally enclosed by '"', 
+         fields terminated by '\t',
+         skip header = 0,  
+         truncate
+ 
+    SET work_mem to '128 MB', maintenance_work_mem to '256 MB'
+
+    BEFORE LOAD DO  
+     $$ drop table if exists admission_diagnosis; $$,  
+
+$$ create table admission_diagnosis(
+  admission_id integer NOT NULL,
+  "position" integer NOT NULL,
+  diag_code character varying(10) NOT NULL,
+  pref char(1) );
+   $$
+   ; 
+
